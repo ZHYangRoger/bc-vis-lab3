@@ -1,8 +1,12 @@
 .container{
-    margin-right: 20px;
+    margin-right: 25px;
     padding-left: 0px;
-    margin-left: 20px;
-    margin-top: 10px;
+    margin-left: 25px;
+    margin-top: 15px;
     padding-right: 0px;
     max-width: 97%;
+}
+
+.top{
+    margin-top:100px
 }

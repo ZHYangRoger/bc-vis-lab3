@@ -86,8 +86,13 @@ async function barChart(){
         .attr('width', width)
         .attr('height', height)
 
+    const svgImg = d3.select(".image-place")
+        .append("svg")
+        .attr("width", 320)
+        .attr("height", 560)
+
     
-    svg.selectAll('.building-graph')
+    svg.selectAll('bar')
         .data(sorted_buildings)
         .enter()
         .append("rect")
@@ -104,6 +109,23 @@ async function barChart(){
             return d.height_px;
         })
         .attr("height", 30)
+        .on("mouseover", function(){
+            d3.select(this).style("fill", "lightblue");
+            d3.select(this).style("cursor", "pointer"); 
+        })
+        .on("mouseout", function(){
+            d3.select(this).style("fill", "black");
+            d3.select(this).style("cursor", "default"); 
+        })
+        .on("click", function(d) {
+            console.log(d.srcElement.__data__.image);
+            console.log("img/" + d.srcElement.__data__.image);
+            svgImg.selectAll("img")
+                .data(sorted_buildings)
+                .enter()
+                .append("svg:image")
+                .attr("xlink:href", "img/" + d.srcElement.__data__.image)
+          });
 
         //console.log(yArr);
     
