@@ -1,7 +1,8 @@
 let cities;
+let buildings;
 
-async function loadData(){
-    let data = await d3.csv('cities.csv', d3.autoType);
+async function loadData(url){
+    let data = await d3.csv(url, d3.autoType);
     return data;
 }
 
@@ -10,11 +11,15 @@ function filterData(){
     return euro_c;
 }
 
-async function main(){
-    cities = await loadData();
-    euro_cities = filterData();
-    //console.log(cities);
-    //console.log(euro_cities);
+function sortData(){
+    let sorted_buil = buildings.sort((a, b) => b.height_m - a.height_m);
+    return sorted_buil;
+}
+
+async function scatterPlot(){
+    const url = 'cities.csv';
+    cities = await loadData(url);
+    let euro_cities = filterData();
 
     d3.select('.city-count').text("Number of cities: " + euro_cities.length);
 
@@ -65,6 +70,89 @@ async function main(){
             return d.y -10;
         })
         .attr("font-size", "11px")
+}
+
+async function barChart(){
+    const url = 'buildings.csv';
+    buildings = await loadData(url);
+    let sorted_buildings = sortData();
+    //console.log(sorted_buildings);
+
+    const width = 500;
+    const height = 500;
+    let yArr = [];
+    const svg = d3.select('.building-graph')
+		.append('svg')
+        .attr('width', width)
+        .attr('height', height)
+
+    
+    svg.selectAll('.building-graph')
+        .data(sorted_buildings)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", 250)
+        .attr("y", function(d){
+            //console.log(height);
+            //console.log(height / (sorted_buildings.length + 1)) * (sorted_buildings.indexOf(d) + 1);
+            let y = height / (sorted_buildings.length + 1) * (sorted_buildings.indexOf(d) + 1);
+            yArr.push(y);
+            return y;
+        })
+        .attr("width", function(d){
+            return d.height_px;
+        })
+        .attr("height", 30)
+
+        //console.log(yArr);
+    
+    let i = 0;
+    let textYArr = [];
+    svg.selectAll("text")
+        .data(sorted_buildings)
+        .enter()
+        .append("text")
+        .attr("class", "label")
+        .attr("x", 0)
+        .attr("y", function(d){
+            let textY = yArr[i] + 20;
+            i += 1;
+            textYArr.push(textY);
+            return textY;
+        })
+        .text(function(d){
+            return d.building;
+        })
+    
+    i = 0;
+    svg.selectAll("endText")
+        .data(sorted_buildings)
+        .enter()
+        .append("text")
+        .attr("class", "label")
+        .attr("fill", "white")
+        .attr("x", function(d){
+            return d.height_px + 250 - 35;
+        })
+        .attr("text-anchor", "end")
+        .attr("y", function(d){
+            let endTextY = textYArr[i];
+            i += 1;
+            console.log(endTextY);
+            return(endTextY);
+        })
+        .text(function(d){
+            return d.height_ft;
+        })
+        
+}
+
+async function main(){
+
+    scatterPlot();
+
+    barChart();
 }
 
 
