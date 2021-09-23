@@ -91,6 +91,30 @@ async function barChart(){
         .attr("width", 320)
         .attr("height", 560)
 
+    const b_height = d3.select(".height")
+        .append("svg")
+        .attr("width", 100)
+        .attr("height", 20)
+
+    const b_city = d3.select(".city")
+        .append("svg")
+        .attr("width", 100)
+        .attr("height", 20)
+
+    const b_country = d3.select(".country")
+        .append("svg")
+        .attr("width", 100)
+        .attr("height", 20)
+
+    const b_floors = d3.select(".floors")
+        .append("svg")
+        .attr("width", 100)
+        .attr("height", 20)
+
+    const b_completed = d3.select(".completed")
+        .append("svg")
+        .attr("width", 100)
+        .attr("height", 20)
     
     svg.selectAll('bar')
         .data(sorted_buildings)
@@ -103,6 +127,7 @@ async function barChart(){
             //console.log(height / (sorted_buildings.length + 1)) * (sorted_buildings.indexOf(d) + 1);
             let y = height / (sorted_buildings.length + 1) * (sorted_buildings.indexOf(d) + 1);
             yArr.push(y);
+            console.log(yArr);
             return y;
         })
         .attr("width", function(d){
@@ -118,13 +143,21 @@ async function barChart(){
             d3.select(this).style("cursor", "default"); 
         })
         .on("click", function(d) {
-            console.log(d.srcElement.__data__.image);
-            console.log("img/" + d.srcElement.__data__.image);
+            //console.log(d.srcElement.__data__.image);
+            //console.log("img/" + d.srcElement.__data__.image);
             svgImg.selectAll("img")
                 .data(sorted_buildings)
                 .enter()
                 .append("svg:image")
                 .attr("xlink:href", "img/" + d.srcElement.__data__.image)
+
+            b_height.selectAll("b_height") 
+                .data(sorted_buildings)
+                .enter()
+                .append("text")
+                .text(function(d){
+                    console.log(d);
+                })
           });
 
         //console.log(yArr);
@@ -161,7 +194,7 @@ async function barChart(){
         .attr("y", function(d){
             let endTextY = textYArr[i];
             i += 1;
-            console.log(endTextY);
+            //(endTextY);
             return(endTextY);
         })
         .text(function(d){
